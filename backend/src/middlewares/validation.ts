@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body, validationResult, param, query } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
 // Middleware to handle validation errors
@@ -31,5 +31,41 @@ export const validateRegister = [
 export const validateLogin = [
   body("email").isEmail().normalizeEmail().withMessage("Invalid email"),
   body("password").exists().withMessage("Password is required"),
+  handleValidationErrors,
+];
+
+// Validation rules for prayer creation/update
+export const validatePrayer = [
+  body("prayerName")
+    .isIn(["FAJR", "DHUHR", "ASR", "MAGHRIB", "ISHA"])
+    .withMessage("Invalid prayer name"),
+  body("prayerType")
+    .isIn(["JAMMAT", "ALONE", "QAZAH", "MISSED"])
+    .withMessage("Invalid prayer type"),
+  body("date").isISO8601().toDate().withMessage("Invalid date format"),
+  handleValidationErrors,
+];
+
+// Validation for prayer ID parameter
+export const validatePrayerId = [
+  param("id").isUUID().withMessage("Invalid prayer ID"),
+  handleValidationErrors,
+];
+
+// Validation for date query
+export const validateDateQuery = [
+  query("date")
+    .optional()
+    .isISO8601()
+    .toDate()
+    .withMessage("Invalid date format"),
+  handleValidationErrors,
+];
+
+// Validation rules for prayer update (only validates prayerType)
+export const validatePrayerUpdate = [
+  body("prayerType")
+    .isIn(["JAMMAT", "ALONE", "QAZAH", "MISSED"])
+    .withMessage("Invalid prayer type"),
   handleValidationErrors,
 ];
