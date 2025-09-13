@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 interface GoogleSignInProps {
   onSignInSuccess: (token: string) => void;
@@ -11,26 +11,28 @@ declare global {
   }
 }
 
-const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSignInSuccess, onSignInError }) => {
+const GoogleSignIn: React.FC<GoogleSignInProps> = ({
+  onSignInSuccess,
+  onSignInError,
+}) => {
   const googleButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google && googleButtonRef.current) {
         window.google.accounts.id.initialize({
-          client_id: '412098878116-bi573r16jb5rmfgb92c361lnuki5a47a.apps.googleusercontent.com',
+          client_id:
+            "412098878116-bi573r16jb5rmfgb92c361lnuki5a47a.apps.googleusercontent.com",
           callback: handleCredentialResponse,
         });
 
-        window.google.accounts.id.renderButton(
-          googleButtonRef.current,
-          {
-            theme: 'outline',
-            size: 'large',
-            text: 'signin_with',
-            shape: 'rectangular',
-          }
-        );
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          shape: "rectangular",
+          width: 280,
+        });
       }
     };
 
@@ -38,7 +40,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSignInSuccess, onSignInEr
       if (response.credential) {
         onSignInSuccess(response.credential);
       } else {
-        onSignInError('No credential received');
+        onSignInError("No credential received");
       }
     };
 
@@ -60,9 +62,11 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSignInSuccess, onSignInEr
   }, [onSignInSuccess, onSignInError]);
 
   return (
-    <div>
-      <h3>Sign in with Google</h3>
-      <div ref={googleButtonRef}></div>
+    <div className="flex justify-center items-center">
+      <div
+        ref={googleButtonRef}
+        className="flex justify-center items-center min-h-[40px] rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+      ></div>
     </div>
   );
 };
