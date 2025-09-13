@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { register, login } from "../controllers/authController";
-import { validateRegister, validateLogin } from "../middlewares/validation";
+import { register, login, googleSignIn } from "../controllers/authController";
+import { validateRegister, validateLogin, validateGoogleSignIn } from "../middlewares/validation";
 
 const router = Router();
 
@@ -9,5 +9,8 @@ router.post("/register", validateRegister, register);
 
 // POST /auth/login
 router.post("/login", validateLogin, login);
+
+// POST /auth/google
+router.post("/google", validateGoogleSignIn, googleSignIn);
 
 export default router;

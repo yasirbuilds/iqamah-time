@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import prisma from "./config/prisma";
 import authRoutes from "./routes/authRoutes";
 import prayerRoutes from "./routes/prayerRoutes";
@@ -7,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (added for form data if needed)
 

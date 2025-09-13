@@ -69,3 +69,15 @@ export const validatePrayerUpdate = [
     .withMessage("Invalid prayer type"),
   handleValidationErrors,
 ];
+
+// Validation rules for Google Sign-In
+export const validateGoogleSignIn = [
+  body("token")
+    .exists()
+    .withMessage("Google token is required")
+    .isString()
+    .withMessage("Google token must be a string")
+    .isLength({ min: 10 })
+    .withMessage("Invalid Google token format"),
+  handleValidationErrors,
+];
