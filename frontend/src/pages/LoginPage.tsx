@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl p-8 shadow-2xl border border-white/20 backdrop-blur-sm animate-in slide-in-from-bottom-4 duration-600">
           <div className="text-center mb-8">

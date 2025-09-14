@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import PrayersHistoryPage from "./pages/PrayersHistoryPage";
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/prayers"
+              element={
+                <ProtectedRoute>
+                  <PrayersHistoryPage />
                 </ProtectedRoute>
               }
             />

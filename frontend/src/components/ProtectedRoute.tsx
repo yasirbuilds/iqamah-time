@@ -13,10 +13,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
         <div className="text-center flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-          <p className="text-white text-lg font-medium">Loading...</p>
+          <Loader2 className="w-10 h-10 animate-spin" />
+          <p className="text-lg font-medium">Loading...</p>
         </div>
       </div>
     );
