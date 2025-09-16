@@ -55,7 +55,7 @@ const getPrayerCardStyles = (prayerType: string | null) => {
     case "QAZAH":
       return "border-orange-200 bg-[#f7665c]";
     case "MISSED":
-      return "border-red-200 bg-[#e6e1e1]";
+      return "border-red-200 bg-[#cdc6c6]";
     default:
       return "border-gray-200 bg-white";
   }

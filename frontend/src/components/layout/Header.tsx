@@ -7,21 +7,21 @@ const Header = () => {
   const location = useLocation();
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <header className="bg-black text-white border-b border-[#FDD535]/70 shadow-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-3">
-            <Building2 className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-xl font-bold text-gray-900">Iqamah Time</h1>
+            <Building2 className="w-8 h-8" />
+            <h1 className="text-xl font-bold">Iqamah Time</h1>
           </Link>
-          
+
           <nav className="hidden md:flex items-center gap-6">
             <Link
               to="/"
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === "/"
-                  ? "bg-indigo-100 text-indigo-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  ? "bg-[#FDD535]/40 !text-white"
+                  : "!text-[#FDD535] hover:bg-[#FDD535]/20"
               }`}
             >
               <Home className="w-4 h-4" />
@@ -31,8 +31,8 @@ const Header = () => {
               to="/prayers"
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === "/prayers"
-                  ? "bg-indigo-100 text-indigo-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  ? "bg-[#FDD535]/40 !text-white"
+                  : "!text-[#FDD535] hover:bg-[#FDD535]/20"
               }`}
             >
               <History className="w-4 h-4" />
@@ -49,13 +49,13 @@ const Header = () => {
                 className="w-10 h-10 rounded-full border-2 border-gray-300"
               />
             )}
-            <span className="hidden sm:block font-medium text-gray-700">
+            <span className="hidden sm:block font-medium text-[#FDD535]">
               {user?.name}
             </span>
           </div>
           <button
             onClick={signOut}
-            className="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-gray-700 font-medium transition-colors duration-200"
+            className="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-[#FDD535] font-medium transition-colors duration-200"
             title="Sign Out"
           >
             <LogOut className="w-4 h-4" />

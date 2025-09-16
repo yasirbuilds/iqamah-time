@@ -21,20 +21,20 @@ const MobileBottomNavigation: React.FC = () => {
   ];
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-[#FDD535] shadow-lg z-50">
       <div className="flex items-center justify-around py-2 px-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
-          
+
           return (
             <Link
               key={item.path}
               to={item.path}
               className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-colors ${
                 isActive
-                  ? "bg-indigo-100 text-indigo-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  ? "bg-[#FDD535]/40 !text-white"
+                  : "!text-[#FDD535] hover:bg-[#FDD535]/20"
               }`}
             >
               <Icon className="w-5 h-5 mb-1" />
@@ -42,11 +42,11 @@ const MobileBottomNavigation: React.FC = () => {
             </Link>
           );
         })}
-        
+
         {/* Sign Out Button */}
         <button
           onClick={signOut}
-          className="flex flex-col items-center justify-center py-2 px-3 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+          className="flex flex-col items-center justify-center py-2 px-3 rounded-lg text-[#FDD535] hover:bg-[#FDD535]/10 transition-colors"
           title="Sign Out"
         >
           <LogOut className="w-5 h-5 mb-1" />
