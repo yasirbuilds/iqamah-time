@@ -283,17 +283,15 @@ const HomePage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-900 !mb-2">
             <span>Assalamu Alaikum, {user?.name?.split(" ")[0]}!</span>
           </h2>
-          <p className="text-lg text-gray-600 italic mb-4">
+          <p className="text-lg text-gray-600 italic !mb-4">
             May Allah bless your day with peace and guidance
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <span className="font-medium">English Date:</span>
               <span>{englishDate}</span>
             </div>
             <div className="hidden sm:block text-gray-300">|</div>
             <div className="flex items-center gap-2">
-              <span className="font-medium">Islamic Date:</span>
               <span>{islamicDate}</span>
             </div>
           </div>
