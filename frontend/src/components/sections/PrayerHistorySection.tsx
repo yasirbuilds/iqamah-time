@@ -110,7 +110,7 @@ const PrayerHistorySection = () => {
           Track your spiritual journey, {user?.name?.split(" ")[0]}
         </p>
       </div>
-      <div className="rounded-2xl md:p-8 p-4 shadow-sm border border-[#FDD535]/60 relative z-10">
+      <div className="rounded-2xl md:p-8 p-4 shadow-sm bg-[#FDD53526] border border-[#FDD535]/60 relative z-10">
         <div className="flex items-center gap-3 mb-6">
           <Calendar className="w-6 h-6 z-20" />
           <h3 className="text-2xl font-semibold z-20">Recent Prayers</h3>
