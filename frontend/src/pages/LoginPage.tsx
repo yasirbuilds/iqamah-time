@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import GoogleSignIn from "../components/GoogleSignIn";
-import {
-  Building2,
-  Smartphone,
-  BarChart3,
-  Loader2,
-  RotateCcw,
-} from "lucide-react";
+import { Smartphone, BarChart3, Loader2, RotateCcw } from "lucide-react";
 
 const LoginPage: React.FC = () => {
   const { signIn, isAuthenticated, isLoading } = useAuth();
@@ -47,16 +41,20 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative">
-      <div className="absolute md:-left-[350px] right-32 md:bottom-[220px] bottom-[450px] md:w-[1000px] md:h-[1080px] w-[500px] h-[600px] rounded-full z-0">
-        <img src="/images/Glow.svg" alt="" className="h-full w-full" />
-      </div>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
       <div className="w-full max-w-md relative z-10">
+        <div className="absolute left-1/2 md:-bottom-[300px] -bottom-[220px] md:w-[350px] md:h-[400px] w-[250px] h-[300px] -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,_#CCAC2A,_#FDD535)] blur-[120px] md:blur-[150px] z-0" />
         <div className="border border-[#FDD535]/80 rounded-2xl md:p-8 p-4 bg-[#FDD53526] shadow-2xl backdrop-blur-sm animate-in slide-in-from-bottom-4 duration-600">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <Building2 className="w-10 h-10" />
-              <h1 className="text-2xl font-bold">Iqamah Time</h1>
+            <div className="flex items-center justify-center gap-1 mb-3">
+              <img
+                src="/images/prayer-mat.png"
+                alt="Logo"
+                className="w-10 h-10"
+              />
+              <h1 className="text-xl font-bold bg-gradient-to-br from-[#62d599] via-[#0ab499] to-[#196f54] bg-clip-text text-transparent">
+                Iqamah Time
+              </h1>
             </div>
             <p className="font-medium">Stay connected with your faith</p>
           </div>

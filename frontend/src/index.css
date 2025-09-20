@@ -165,6 +165,41 @@ h4 {
   font-family: "Poppins-SemiBold", sans-serif !important;
 }
 
+/* Hide scrollbars */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Mobile Bottom Sheet Styles */
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Smooth scrolling for mobile */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom backdrop blur for iOS Safari */
+@supports (-webkit-backdrop-filter: blur(10px)) {
+  .backdrop-blur-mobile {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Haptic feedback styles */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-touch-feedback:active {
+    transform: scale(0.98);
+  }
+}
+
 /*  */
 
 /* .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe {

@@ -1,44 +1,11 @@
 import { CheckCircle, Circle, Loader2, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Cookies from "js-cookie";
-import PrayerSelectionModal from "../PrayerSelectionModal";
-
-interface Prayer {
-  id: string | null;
-  name: string;
-  time: string;
-  completed: boolean;
-  prayerName?: string;
-  prayerType?: string | null;
-}
-
-interface ApiPrayer {
-  id: string | null;
-  prayerName: string;
-  prayerType: string | null;
-  date: string;
-}
-
-interface TodayPrayersResponse {
-  prayers: ApiPrayer[];
-}
-
-const PRAYER_TIMES = {
-  FAJR: "05:30 AM",
-  DHUHR: "12:45 PM",
-  ASR: "04:15 PM",
-  MAGHRIB: "06:30 PM",
-  ISHA: "08:00 PM",
-};
-
-const PRAYER_DISPLAY_NAMES = {
-  FAJR: "Fajr",
-  DHUHR: "Dhuhr",
-  ASR: "Asr",
-  MAGHRIB: "Maghrib",
-  ISHA: "Isha",
-};
+import { formatDateForAPI } from "../../utils/formatDate";
+import { fetchPrayersByDate } from "../../api/prayerApi";
+import { getPrayerStatusLabel } from "../../utils/prayerStatus";
+import type { ApiPrayer, Prayer } from "../../types";
+import { ALL_PRAYERS, PRAYER_DISPLAY_NAMES } from "../../utils";
 
 // Prayer status colors
 const getPrayerCardStyles = (prayerType: string | null) => {
@@ -53,21 +20,6 @@ const getPrayerCardStyles = (prayerType: string | null) => {
       return "backdrop-blur-lg bg-gray-500/20 border-l-4 border-gray-400";
     default:
       return "backdrop-blur-lg border-l-4 border-[#FDD535]/70 bg-[#FDD53526]";
-  }
-};
-
-const getPrayerStatusLabel = (prayerType: string | null) => {
-  switch (prayerType) {
-    case "JAMMAT":
-      return "Jamaat";
-    case "ALONE":
-      return "Alone";
-    case "QAZAH":
-      return "Qazah";
-    case "MISSED":
-      return "Missed";
-    default:
-      return null;
   }
 };
 
@@ -86,13 +38,18 @@ const getPrayerIconColor = (prayerType: string | null) => {
   }
 };
 
-const TodayPrayerSection = () => {
+interface TodayPrayerSectionProps {
+  selectedDate: Date;
+  onOpenModal: (prayer: Prayer) => void;
+}
+
+const TodayPrayerSection: React.FC<TodayPrayerSectionProps> = ({
+  selectedDate,
+  onOpenModal,
+}) => {
   const [prayerTimes, setPrayerTimes] = useState<Prayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
-  const [updating, setUpdating] = useState(false);
 
   // Transform API response to frontend format
   const transformPrayerData = (apiPrayers: ApiPrayer[]): Prayer[] => {
@@ -102,115 +59,40 @@ const TodayPrayerSection = () => {
         PRAYER_DISPLAY_NAMES[
           prayer.prayerName as keyof typeof PRAYER_DISPLAY_NAMES
         ] || prayer.prayerName,
-      time:
-        PRAYER_TIMES[prayer.prayerName as keyof typeof PRAYER_TIMES] ||
-        "00:00 AM",
-      completed: !!prayer.prayerType, // If prayerType exists, prayer is completed
+      completed: !!prayer.prayerType && prayer.prayerType !== "MISSED",
       prayerName: prayer.prayerName,
       prayerType: prayer.prayerType,
     }));
   };
 
-  // Create prayer API call
-  const createPrayer = async (prayerName: string, prayerType: string) => {
-    try {
-      const token = Cookies.get("token");
-      const today = new Date().toISOString().split("T")[0];
-
-      const response = await fetch(
-        "https://iqamah-time-production.up.railway.app/prayers",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prayerName,
-            prayerType,
-            date: today,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create prayer");
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error creating prayer:", error);
-      throw error;
-    }
-  };
-
-  // Update prayer API call
-  const updatePrayer = async (prayerId: string, prayerType: string) => {
-    try {
-      const token = Cookies.get("token");
-
-      const response = await fetch(
-        `https://iqamah-time-production.up.railway.app/prayers/${prayerId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prayerType,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update prayer");
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error updating prayer:", error);
-      throw error;
-    }
-  };
-
-  // Fetch today's prayers from API
+  // Fetch prayers for selected date from API
   const fetchTodaysPrayers = async () => {
     try {
       setLoading(true);
-      const token = Cookies.get("token");
+      const dateString = formatDateForAPI(selectedDate);
 
-      const response = await fetch(
-        "https://iqamah-time-production.up.railway.app/prayers/today",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const prayersArray = await fetchPrayersByDate(dateString);
 
-      if (response.ok) {
-        const data: TodayPrayersResponse = await response.json();
-        const transformedPrayers = transformPrayerData(data.prayers);
-        setPrayerTimes(transformedPrayers);
-        setError(null);
-      } else {
-        throw new Error("Failed to fetch prayer times");
-      }
+      // Create a complete list of prayers for the selected date
+      const allPrayers = ALL_PRAYERS.map((prayerName) => {
+        const existingPrayer = prayersArray.find(
+          (p: any) => p.prayerName === prayerName
+        );
+        return {
+          prayerName,
+          prayerType: existingPrayer?.prayerType || null,
+          id: existingPrayer?.id || null,
+          date: dateString,
+        };
+      });
+
+      const transformedPrayers = transformPrayerData(allPrayers);
+      setPrayerTimes(transformedPrayers);
+      setError(null);
     } catch (err) {
       console.error("Error fetching prayers:", err);
       setError("Failed to load prayer times");
       toast.error("Failed to load prayer times. Using sample data.");
-
-      // Fallback to static data
-      setPrayerTimes([
-        { id: "1", name: "Fajr", time: "05:30 AM", completed: true },
-        { id: "2", name: "Dhuhr", time: "12:45 PM", completed: true },
-        { id: "3", name: "Asr", time: "04:15 PM", completed: false },
-        { id: "4", name: "Maghrib", time: "06:30 PM", completed: false },
-        { id: "5", name: "Isha", time: "08:00 PM", completed: false },
-      ]);
     } finally {
       setLoading(false);
     }
@@ -218,7 +100,7 @@ const TodayPrayerSection = () => {
 
   useEffect(() => {
     fetchTodaysPrayers();
-  }, []);
+  }, [selectedDate]);
 
   const retryFetch = async () => {
     try {
@@ -229,50 +111,38 @@ const TodayPrayerSection = () => {
     }
   };
 
-  // Handle prayer status selection
-  const handleStatusSelect = async (status: string) => {
-    if (!selectedPrayer) return;
+  // Handle prayer card click
+  const handlePrayerClick = (prayer: Prayer) => {
+    onOpenModal(prayer);
+  };
 
-    setUpdating(true);
-    try {
-      if (selectedPrayer.id && selectedPrayer.id.startsWith("temp-")) {
-        // Create new prayer
-        await createPrayer(selectedPrayer.prayerName!, status);
-        toast.success(
-          `${selectedPrayer.name} prayer status saved as ${getPrayerStatusLabel(
-            status
-          )}`
-        );
-      } else if (selectedPrayer.id) {
-        // Update existing prayer
-        await updatePrayer(selectedPrayer.id, status);
-        toast.success(
-          `${
-            selectedPrayer.name
-          } prayer status updated to ${getPrayerStatusLabel(status)}`
-        );
-      }
+  // Format date for section title
+  const formatDateTitle = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
 
-      // Refresh prayer data
-      await fetchTodaysPrayers();
-      setModalOpen(false);
-      setSelectedPrayer(null);
-    } catch (error) {
-      toast.error("Failed to save prayer status");
-    } finally {
-      setUpdating(false);
+    if (date.toDateString() === today.toDateString()) {
+      return "Today's Prayer";
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday's Prayer";
+    } else {
+      return `${date.toLocaleDateString("en-US", {
+        year: "numeric",
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })}`;
     }
   };
 
-  // Handle prayer card click
-  const handlePrayerClick = (prayer: Prayer) => {
-    setSelectedPrayer(prayer);
-    setModalOpen(true);
-  };
   return (
     <section className="mb-12">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-semibold ">Today's Prayer</h3>
+        <h3 className="text-2xl font-semibold">
+          {formatDateTitle(selectedDate)}
+        </h3>
         {error && (
           <button
             onClick={retryFetch}
@@ -345,18 +215,6 @@ const TodayPrayerSection = () => {
           ))}
         </div>
       )}
-      {/* Prayer Selection Modal */}
-      <PrayerSelectionModal
-        isOpen={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          setSelectedPrayer(null);
-        }}
-        prayerName={selectedPrayer?.name || ""}
-        currentStatus={selectedPrayer?.prayerType || null}
-        onStatusSelect={handleStatusSelect}
-        loading={updating}
-      />
     </section>
   );
 };

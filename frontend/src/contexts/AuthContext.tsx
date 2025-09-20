@@ -82,8 +82,8 @@ export const AuthProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         setToken(data.token);
 
         // Store in cookies
-        Cookies.set("token", data.token, { expires: 7 }); // 7 days
-        Cookies.set("user", JSON.stringify(data.user), { expires: 7 });
+        Cookies.set("token", data.token, { expires: 30 }); // 30 days
+        Cookies.set("user", JSON.stringify(data.user), { expires: 30 });
 
         toast.success(`Welcome ${data.user.name}!`);
 

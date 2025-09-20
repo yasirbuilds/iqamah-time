@@ -8,7 +8,7 @@ const HomeWelcomeSection = () => {
   const [islamicDate, setIslamicDate] = useState<string>("");
 
   useEffect(() => {
-    // Calculate today's dates
+    // Calculate today's Gregorian date
     const today = new Date();
     const englishDateStr = today.toLocaleDateString("en-US", {
       weekday: "long",
@@ -27,6 +27,7 @@ const HomeWelcomeSection = () => {
       setIslamicDate("Islamic date unavailable");
     }
   }, []);
+
   return (
     <section className="text-center mb-12">
       <h2 className="text-3xl font-bold !mb-2">
@@ -41,7 +42,12 @@ const HomeWelcomeSection = () => {
         </div>
         <div className="hidden sm:block">|</div>
         <div className="flex items-center gap-2">
-          <span>{islamicDate}</span>
+          <span
+            className="not-italic tracking-wide text-left"
+            style={{ direction: "ltr", unicodeBidi: "plaintext" }}
+          >
+            {islamicDate}
+          </span>
         </div>
       </div>
     </section>

@@ -1,15 +1,7 @@
 import Cookies from "js-cookie";
+import type { Prayer } from "../types";
 
-const API_BASE_URL = "https://iqamah-time-production.up.railway.app";
-
-export interface Prayer {
-  id: string;
-  prayerName: string;
-  prayerType: string;
-  date: string;
-  createdAt: string;
-  updatedAt: string;
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface PrayersResponse {
   prayers: Prayer[];

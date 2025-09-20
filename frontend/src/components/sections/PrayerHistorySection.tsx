@@ -4,27 +4,13 @@ import { toast } from "sonner";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { fetchAllPrayers, fetchPrayers } from "../../services/prayerService";
-
-interface Prayer {
-  id: string;
-  prayerName: string;
-  prayerType: string;
-  date: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const PRAYER_TYPE_LABELS = {
-  JAMMAT: "Jamaat",
-  ALONE: "Alone",
-  QAZAH: "Qazah",
-  MISSED: "Missed",
-};
+import { ALL_PRAYERS, PRAYER_DISPLAY_NAMES } from "../../utils";
+import type { PrayerAPI } from "../../types";
 
 const PrayerHistorySection = () => {
   const { user } = useAuth();
-  const [prayers, setPrayers] = useState<Prayer[]>([]);
-  const [allPrayers, setAllPrayers] = useState<Prayer[]>([]);
+  const [prayers, setPrayers] = useState<PrayerAPI[]>([]);
+  const [allPrayers, setAllPrayers] = useState<PrayerAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "end",
@@ -33,7 +19,7 @@ const PrayerHistorySection = () => {
     direction: "ltr",
   });
 
-  const prayerOrder = ["FAJR", "DHUHR", "ASR", "MAGHRIB", "ISHA"];
+  const prayerOrder = ALL_PRAYERS;
 
   const loadPrayers = async (page: number = 1) => {
     try {
@@ -70,7 +56,7 @@ const PrayerHistorySection = () => {
   }, [emblaApi, allPrayers]);
 
   const groupPrayersByDate = () => {
-    const grouped: { [date: string]: { [prayer: string]: Prayer } } = {};
+    const grouped: { [date: string]: { [prayer: string]: PrayerAPI } } = {};
 
     allPrayers.forEach((prayer) => {
       const date = prayer.date.split("T")[0];
@@ -80,20 +66,37 @@ const PrayerHistorySection = () => {
       grouped[date][prayer.prayerName] = prayer;
     });
 
-    return Object.entries(grouped)
-      .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime());
+    return grouped;
   };
+
+  // New function to generate all dates in the range (from min to max date in allPrayers)
+  const getDateRange = () => {
+    if (allPrayers.length === 0) return [];
+    const dates = allPrayers.map((p) => new Date(p.date.split("T")[0]));
+    const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
+    const range: string[] = [];
+    const current = new Date(minDate);
+    while (current <= maxDate) {
+      range.push(current.toISOString().split("T")[0]);
+      current.setDate(current.getDate() + 1);
+    }
+    return range;
+  };
+
+  const groupedPrayers = groupPrayersByDate();
+  const dateRange = getDateRange();
 
   const getPrayerTypeColor = (prayerType: string) => {
     switch (prayerType) {
       case "JAMMAT":
-        return "bg-[#6ff776]";
+        return "bg-green-400";
       case "ALONE":
-        return "bg-[#f7ba5e]";
+        return "bg-blue-400";
       case "QAZAH":
-        return "bg-[#f7665c]";
+        return "bg-rose-400";
       case "MISSED":
-        return "bg-[#cdc6c6]";
+        return "bg-gray-500";
       default:
         return "bg-white";
     }
@@ -101,9 +104,7 @@ const PrayerHistorySection = () => {
 
   return (
     <section className="relative">
-      <div className="absolute md:-left-[750px] right-32 md:bottom-[0px] bottom-[120px] md:w-[1000px] md:h-[1080px] w-[500px] h-[600px] rounded-full z-0">
-        <img src="/images/Glow.svg" alt="" className="h-full w-full" />
-      </div>
+      <div className="absolute md:-left-40 -right-56 md:-top-[20px] -top-[50px] md:w-[350px] md:h-[400px] w-[250px] h-[300px] -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,_#CCAC2A,_#FDD535)] md:blur-[130px] blur-[110px] z-0" />
       <div className="text-center mb-10 relative z-10">
         <h2 className="text-3xl font-bold !mb-2">Prayer History</h2>
         <p className="text-lg">
@@ -117,10 +118,10 @@ const PrayerHistorySection = () => {
         </div>
 
         {loading ? (
-          <div className="mt-8">
+          <div className="mt-8 overflow-hidden">
             <div className="flex items-start gap-4">
-              {/* Carousel-like skeleton */}
-              <div className="overflow-hidden flex-1" ref={emblaRef}>
+              {/* Skeleton */}
+              <div className="overflow-hidden flex-1 mt-1" ref={emblaRef}>
                 <div className="flex md:gap-3 gap-2">
                   {[...Array(9)].map((_, index) => (
                     <div key={index} className="flex-shrink-0">
@@ -157,23 +158,23 @@ const PrayerHistorySection = () => {
             <div className="flex justify-between md:justify-center md:gap-6 gap-4 mt-8 md:text-xs text-[10px]">
               <div className="flex items-center gap-1">
                 <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="w-16 h-3 bg-gray-200 rounded animate-pulse block" />
+                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
               </div>
               <div className="flex items-center gap-1">
                 <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="w-16 h-3 bg-gray-200 rounded animate-pulse block" />
+                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
               </div>
               <div className="flex items-center gap-1">
                 <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="w-16 h-3 bg-gray-200 rounded animate-pulse block" />
+                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
               </div>
               <div className="flex items-center gap-1">
                 <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="w-16 h-3 bg-gray-200 rounded animate-pulse block" />
+                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
               </div>
               <div className="flex items-center gap-1">
                 <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="w-16 h-3 bg-gray-200 rounded animate-pulse block" />
+                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
               </div>
             </div>
           </div>
@@ -206,37 +207,40 @@ const PrayerHistorySection = () => {
                           <div className="text-xs text-center w-8 h-4 bg-gray-200 rounded animate-pulse" />
                         </div>
                       ))
-                    : groupPrayersByDate().map(([date, dayPrayers]) => (
-                        <div key={date} className="flex-shrink-0">
-                          <div className="text-xs text-center mb-2">
-                            {new Date(date).getDate()}
+                    : dateRange.map((date) => {
+                        const dayPrayers = groupedPrayers[date] || {};
+                        return (
+                          <div key={date} className="flex-shrink-0">
+                            <div className="text-xs text-center mb-2">
+                              {new Date(date).getDate()}
+                            </div>
+                            <div className="flex flex-col md:gap-3 gap-2 mt-">
+                              {prayerOrder.map((prayerName) => {
+                                const prayer = dayPrayers[prayerName];
+                                return (
+                                  <div
+                                    key={prayerName}
+                                    className={`md:w-8 md:h-8 w-6 h-6 rounded-md ${
+                                      prayer
+                                        ? getPrayerTypeColor(prayer.prayerType)
+                                        : "bg-white"
+                                    }`}
+                                    title={
+                                      prayer
+                                        ? `${prayerName} - ${
+                                            PRAYER_DISPLAY_NAMES[
+                                              prayer.prayerType as keyof typeof PRAYER_DISPLAY_NAMES
+                                            ]
+                                          }`
+                                        : `${prayerName} - Not recorded`
+                                    }
+                                  />
+                                );
+                              })}
+                            </div>
                           </div>
-                          <div className="flex flex-col md:gap-3 gap-2 mt-">
-                            {prayerOrder.map((prayerName) => {
-                              const prayer = dayPrayers[prayerName];
-                              return (
-                                <div
-                                  key={prayerName}
-                                  className={`md:w-8 md:h-8 w-6 h-6 rounded-md ${
-                                    prayer
-                                      ? getPrayerTypeColor(prayer.prayerType)
-                                      : "bg-white"
-                                  }`}
-                                  title={
-                                    prayer
-                                      ? `${prayerName} - ${
-                                          PRAYER_TYPE_LABELS[
-                                            prayer.prayerType as keyof typeof PRAYER_TYPE_LABELS
-                                          ]
-                                        }`
-                                      : `${prayerName} - Not recorded`
-                                  }
-                                />
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                 </div>
               </div>
 
