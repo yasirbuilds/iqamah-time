@@ -25,7 +25,7 @@ const PrayerHistorySection = () => {
     try {
       setLoading(true);
       const data = await fetchPrayers(page);
-      setPrayers(data.prayers);
+      setPrayers(data.prayers as unknown as PrayerAPI[]);
     } catch (error) {
       console.error(error);
       toast.error("Failed to load prayer history");
@@ -37,7 +37,7 @@ const PrayerHistorySection = () => {
   const loadAllPrayers = async () => {
     try {
       const data = await fetchAllPrayers();
-      setAllPrayers(data.prayers);
+      setAllPrayers(data.prayers as unknown as PrayerAPI[]);
     } catch (error) {
       console.error(error);
     }
