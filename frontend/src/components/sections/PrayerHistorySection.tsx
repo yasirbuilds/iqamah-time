@@ -1,10 +1,11 @@
 import { Calendar, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { showErrorToast } from "../../utils/toastHelpers";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { fetchAllPrayers, fetchPrayers } from "../../services/prayerService";
 import { ALL_PRAYERS, PRAYER_DISPLAY_NAMES } from "../../utils";
+import Skeleton from "../Skeleton";
 import type { PrayerAPI } from "../../types";
 
 const PrayerHistorySection = () => {
@@ -17,6 +18,7 @@ const PrayerHistorySection = () => {
     containScroll: "trimSnaps",
     slidesToScroll: 1,
     direction: "ltr",
+    startIndex: -1, // Start from the last slide (latest date)
   });
 
   const prayerOrder = ALL_PRAYERS;
@@ -28,7 +30,7 @@ const PrayerHistorySection = () => {
       setPrayers(data.prayers as unknown as PrayerAPI[]);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load prayer history");
+      showErrorToast("Failed to load prayer history", error);
     } finally {
       setLoading(false);
     }
@@ -48,10 +50,13 @@ const PrayerHistorySection = () => {
     loadAllPrayers();
   }, []);
 
-  // Scroll to the end (latest dates) when carousel is ready and data is loaded
+  // Scroll to the end (latest dates) only once when carousel is ready and data is loaded
   useEffect(() => {
     if (emblaApi && allPrayers.length > 0) {
-      emblaApi.scrollTo(emblaApi.slideNodes().length - 1);
+      // Use setTimeout to ensure DOM is ready
+      setTimeout(() => {
+        emblaApi.scrollTo(emblaApi.slideNodes().length - 1, true); // true = immediate, no animation
+      }, 0);
     }
   }, [emblaApi, allPrayers]);
 
@@ -126,13 +131,15 @@ const PrayerHistorySection = () => {
                   {[...Array(9)].map((_, index) => (
                     <div key={index} className="flex-shrink-0">
                       <div className="text-xs text-center mb-2">
-                        <div className="w-6 h-3 bg-gray-200 rounded mx-auto animate-pulse" />
+                        <Skeleton width="1.5rem" height="0.75rem" className="mx-auto" />
                       </div>
                       <div className="flex flex-col md:gap-3 gap-2">
                         {prayerOrder.map((prayerName) => (
-                          <div
+                          <Skeleton
                             key={prayerName}
-                            className="md:w-8 md:h-8 w-6 h-6 rounded-md bg-gray-200 animate-pulse"
+                            className="md:w-8 md:h-8 w-6 h-6 rounded-md"
+                            width="2rem"
+                            height="2rem"
                           />
                         ))}
                       </div>
@@ -148,7 +155,7 @@ const PrayerHistorySection = () => {
                     key={prayer}
                     className="text-xs text-center md:w-8 md:h-8 w-6 h-6 flex items-center justify-center font-medium"
                   >
-                    <div className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
+                    <Skeleton variant="circle" width="1.5rem" height="1.5rem" />
                   </div>
                 ))}
               </div>
@@ -157,24 +164,24 @@ const PrayerHistorySection = () => {
             {/* Legend skeleton */}
             <div className="flex justify-between md:justify-center md:gap-6 gap-4 mt-8 md:text-xs text-[10px]">
               <div className="flex items-center gap-1">
-                <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
+                <Skeleton variant="rectangle" className="md:w-3 md:h-3 h-2 w-2 rounded-sm" width="0.75rem" height="0.75rem" />
+                <Skeleton variant="text" className="md:w-16 w-10 md:h-3 h-2" width="4rem" height="0.75rem" />
               </div>
               <div className="flex items-center gap-1">
-                <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
+                <Skeleton variant="rectangle" className="md:w-3 md:h-3 h-2 w-2 rounded-sm" width="0.75rem" height="0.75rem" />
+                <Skeleton variant="text" className="md:w-16 w-10 md:h-3 h-2" width="4rem" height="0.75rem" />
               </div>
               <div className="flex items-center gap-1">
-                <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
+                <Skeleton variant="rectangle" className="md:w-3 md:h-3 h-2 w-2 rounded-sm" width="0.75rem" height="0.75rem" />
+                <Skeleton variant="text" className="md:w-16 w-10 md:h-3 h-2" width="4rem" height="0.75rem" />
               </div>
               <div className="flex items-center gap-1">
-                <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
+                <Skeleton variant="rectangle" className="md:w-3 md:h-3 h-2 w-2 rounded-sm" width="0.75rem" height="0.75rem" />
+                <Skeleton variant="text" className="md:w-16 w-10 md:h-3 h-2" width="4rem" height="0.75rem" />
               </div>
               <div className="flex items-center gap-1">
-                <div className="md:w-3 md:h-3 h-2 w-2 bg-gray-200 rounded-sm animate-pulse" />
-                <span className="md:w-16 w-10 md:h-3 h-2 bg-gray-200 rounded animate-pulse block" />
+                <Skeleton variant="rectangle" className="md:w-3 md:h-3 h-2 w-2 rounded-sm" width="0.75rem" height="0.75rem" />
+                <Skeleton variant="text" className="md:w-16 w-10 md:h-3 h-2" width="4rem" height="0.75rem" />
               </div>
             </div>
           </div>
@@ -198,13 +205,15 @@ const PrayerHistorySection = () => {
                         <div key={index} className="flex-shrink-0">
                           <div className="flex flex-col gap-1 mb-2">
                             {prayerOrder.map((prayerIndex) => (
-                              <div
+                              <Skeleton
                                 key={prayerIndex}
-                                className="md:w-8 md:h-8 w-6 h-6 rounded-md bg-gray-200 animate-pulse"
+                                className="md:w-8 md:h-8 w-6 h-6 rounded-md"
+                                width="2rem"
+                                height="2rem"
                               />
                             ))}
                           </div>
-                          <div className="text-xs text-center w-8 h-4 bg-gray-200 rounded animate-pulse" />
+                          <Skeleton variant="text" className="text-xs text-center w-8 h-4" width="2rem" height="1rem" />
                         </div>
                       ))
                     : dateRange.map((date) => {

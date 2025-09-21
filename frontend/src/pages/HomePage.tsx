@@ -7,11 +7,10 @@ import MobileBottomNavigation from "../components/layout/MobileBottomNavigation"
 import ComingSoonFeatureSection from "../components/sections/ComingSoonFeatureSection";
 import DateScrollPicker from "../components/DateScrollPicker";
 import PrayerSelectionModal from "../components/PrayerSelectionModal";
-import { toast } from "sonner";
+import { showPrayerSuccessToast, showErrorToast } from "../utils/toastHelpers";
 import Cookies from "js-cookie";
 import type { Prayer } from "../types";
 import { formatDateForAPI } from "../utils/formatDate";
-import { getPrayerStatusLabel } from "../utils/prayerStatus";
 import { updatePrayer } from "../api/prayerApi";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -59,24 +58,24 @@ const HomePage: React.FC = () => {
     try {
       if (!selectedPrayer.id || selectedPrayer.id.startsWith("temp-")) {
         await createPrayer(selectedPrayer.prayerName!, status);
-        toast.success(
-          `${selectedPrayer.name} prayer saved as ${getPrayerStatusLabel(
-            status
-          )}`
+        showPrayerSuccessToast(
+          selectedPrayer.name!,
+          status as keyof typeof import("../utils/toastHelpers").PRAYER_SUCCESS_MESSAGES,
+          false
         );
       } else {
         await updatePrayer(selectedPrayer.id, status);
-        toast.success(
-          `${selectedPrayer.name} prayer updated to ${getPrayerStatusLabel(
-            status
-          )}`
+        showPrayerSuccessToast(
+          selectedPrayer.name!,
+          status as keyof typeof import("../utils/toastHelpers").PRAYER_SUCCESS_MESSAGES,
+          true
         );
       }
       // Trigger a re-fetch in child components
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
       console.error("Prayer save error:", error);
-      toast.error("Failed to save prayer status");
+      showErrorToast("Failed to save prayer status", error);
     } finally {
       setUpdating(false);
       setModalOpen(false);
@@ -109,6 +108,11 @@ const HomePage: React.FC = () => {
           key={`prayer-${refreshKey}`}
         />
         <ComingSoonFeatureSection />
+        <div className="flex justify-center mt-8 mb-5 md:mb-0">
+          <a href="mailto:muhammadyasir4741@gmail.com">
+            <p className="text-sm text-gray-300">Send Feedback</p>
+          </a>
+        </div>
       </main>
 
       <MobileBottomNavigation />

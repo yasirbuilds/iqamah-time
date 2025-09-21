@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader2 } from 'lucide-react';
+import Loader from './Loader';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,12 +13,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <div className="text-center flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 animate-spin" />
-          <p className="text-lg font-medium">Loading...</p>
-        </div>
-      </div>
+      <Loader
+        fullScreen={true}
+        size="lg"
+        text="Loading..."
+      />
     );
   }
 

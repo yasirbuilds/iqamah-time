@@ -1,7 +1,8 @@
 import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { showErrorToast } from "../../utils/toastHelpers";
 import { fetchStats } from "../../services/prayerService";
+import Skeleton from "../Skeleton";
 
 const PRAYER_TYPE_LABELS = {
   JAMMAT: "Jamaat",
@@ -21,7 +22,7 @@ const StatisticSection = () => {
       setStats(data.stats);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to load prayer statistics");
+      showErrorToast("Failed to load prayer statistics", error);
     } finally {
       setStatsLoading(false);
     }
@@ -48,11 +49,11 @@ const StatisticSection = () => {
             {[...Array(5)].map((_, index) => (
               <div
                 key={index}
-                className="text-center p-4 bg-gray-50 rounded-xl animate-pulse"
+                className="text-center p-4 bg-[#FDD53526] border border-[#FDD535]/30 rounded-xl"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded mb-2 mx-auto"></div>
-                <div className="w-16 h-4 bg-gray-200 rounded mb-1 mx-auto"></div>
-                <div className="w-12 h-3 bg-gray-200 rounded mx-auto"></div>
+                <Skeleton variant="circle" className="w-8 h-8 mx-auto mb-2" width="2rem" height="2rem" />
+                <Skeleton variant="text" className="w-16 h-4 mx-auto mb-1" width="4rem" height="1rem" />
+                <Skeleton variant="text" className="w-12 h-3 mx-auto" width="3rem" height="0.75rem" />
               </div>
             ))}
           </div>

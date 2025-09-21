@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { showErrorToast } from "../../utils/toastHelpers";
 import { formatDateForAPI } from "../../utils/formatDate";
 import { fetchPrayersByDate } from "../../api/prayerApi";
 import type { ApiPrayer, Prayer } from "../../types";
@@ -43,7 +43,7 @@ const TodayProgressSection: React.FC<TodayProgressSectionProps> = ({
     } catch (err) {
       console.error("Error fetching prayers:", err);
       setError("Failed to load prayer times");
-      toast.error("Failed to load prayer times. Using sample data.");
+      showErrorToast("Failed to load prayer times", err);
     } finally {
       setLoading(false);
     }

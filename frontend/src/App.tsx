@@ -38,7 +38,22 @@ function App() {
           </Routes>
 
           {/* Toast notifications */}
-          <Toaster position="bottom-right" richColors />
+          <Toaster 
+            position="bottom-right" 
+            richColors
+            theme="dark"
+            toastOptions={{
+              style: {
+                background: 'rgba(0, 0, 0, 0.9)',
+                border: '1px solid rgba(253, 213, 53, 0.3)',
+                backdropFilter: 'blur(16px)',
+                color: 'white',
+              },
+              className: 'sonner-toast',
+            }}
+            closeButton={true}
+            duration={4000}
+          />
         </div>
       </Router>
     </AuthProvider>

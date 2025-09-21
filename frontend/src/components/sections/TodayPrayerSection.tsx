@@ -1,6 +1,8 @@
-import { CheckCircle, Circle, Loader2, RotateCcw } from "lucide-react";
+import { CheckCircle, Circle, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { showErrorToast, showInfoToast } from "../../utils/toastHelpers";
+import Loader from "../Loader";
+import Skeleton from "../Skeleton";
 import { formatDateForAPI } from "../../utils/formatDate";
 import { fetchPrayersByDate } from "../../api/prayerApi";
 import { getPrayerStatusLabel } from "../../utils/prayerStatus";
@@ -92,7 +94,7 @@ const TodayPrayerSection: React.FC<TodayPrayerSectionProps> = ({
     } catch (err) {
       console.error("Error fetching prayers:", err);
       setError("Failed to load prayer times");
-      toast.error("Failed to load prayer times. Using sample data.");
+      showErrorToast("Failed to load prayer times", err);
     } finally {
       setLoading(false);
     }
@@ -105,9 +107,9 @@ const TodayPrayerSection: React.FC<TodayPrayerSectionProps> = ({
   const retryFetch = async () => {
     try {
       await fetchTodaysPrayers();
-      toast.success("Prayer records updated successfully!");
+      showInfoToast("Prayer records updated successfully! 🔄");
     } catch (err) {
-      toast.error("Still unable to load prayer times.");
+      showErrorToast("Still unable to load prayer times", err);
     }
   };
 
@@ -150,7 +152,7 @@ const TodayPrayerSection: React.FC<TodayPrayerSectionProps> = ({
             disabled={loading}
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader size="sm" />
             ) : (
               <RotateCcw className="w-4 h-4" />
             )}
@@ -164,14 +166,14 @@ const TodayPrayerSection: React.FC<TodayPrayerSectionProps> = ({
           {[...Array(5)].map((_, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 animate-pulse"
+              className="backdrop-blur-lg border-l-4 border-l-[#FDD535] border border-[#FDD535]/30 bg-[#FDD53526] rounded-xl p-6 shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="h-6 bg-gray-200 rounded w-16 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-20"></div>
+                  <Skeleton width="4rem" height="1.5rem" className="mb-2" />
+                  <Skeleton width="5rem" height="1rem" />
                 </div>
-                <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                <Skeleton variant="circle" width="1.5rem" height="1.5rem" />
               </div>
             </div>
           ))}

@@ -214,4 +214,115 @@ h4 {
   color: white;
 } */
 
+/* Custom Toast Styles */
+[data-sonner-toaster] {
+  --normal-bg: rgba(0, 0, 0, 0.95);
+  --normal-border: rgba(253, 213, 53, 0.3);
+  --normal-text: white;
+  --success-bg: rgba(34, 197, 94, 0.1);
+  --success-border: rgba(34, 197, 94, 0.7);
+  --success-text: rgb(34, 197, 94);
+  --error-bg: rgba(239, 68, 68, 0.1);
+  --error-border: rgba(239, 68, 68, 0.7);
+  --error-text: rgb(239, 68, 68);
+  --info-bg: rgba(253, 213, 53, 0.1);
+  --info-border: rgba(253, 213, 53, 0.7);
+  --info-text: rgb(253, 213, 53);
+}
+
+[data-sonner-toast] {
+  background: var(--normal-bg) !important;
+  border: 1px solid var(--normal-border) !important;
+  backdrop-filter: blur(16px) !important;
+  color: var(--normal-text) !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(0) !important;
+  transition: all 0.3s ease !important;
+}
+
+[data-sonner-toast]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+  color: var(--success-text) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+  color: var(--error-text) !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: var(--info-bg) !important;
+  border-color: var(--info-border) !important;
+  color: var(--info-text) !important;
+}
+
+[data-sonner-toast] [data-icon] {
+  margin-right: 12px !important;
+}
+
+[data-sonner-toast] [data-content] {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+[data-sonner-toast] [data-button] {
+  margin-left: 12px !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  background: rgba(253, 213, 53, 0.2) !important;
+  border: 1px solid rgba(253, 213, 53, 0.5) !important;
+  color: rgb(253, 213, 53) !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-sonner-toast] [data-button]:hover {
+  background: rgba(253, 213, 53, 0.3) !important;
+  border-color: rgba(253, 213, 53, 0.7) !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  [data-sonner-toaster] {
+    top: 20px !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
+  }
+  
+  [data-sonner-toast] {
+    padding: 12px !important;
+    font-size: 13px !important;
+  }
+  
+  [data-sonner-toast] [data-content] {
+    font-size: 13px !important;
+  }
+}
+
+/* Success toast glow effect */
+[data-sonner-toast][data-type="success"] {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2), 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Error toast glow effect */
+[data-sonner-toast][data-type="error"] {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2), 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Info toast glow effect */
+[data-sonner-toast][data-type="info"] {
+  box-shadow: 0 0 20px rgba(253, 213, 53, 0.2), 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
 /*  */

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import GoogleSignIn from "../components/GoogleSignIn";
-import { Smartphone, BarChart3, Loader2, RotateCcw } from "lucide-react";
+import Loader from "../components/Loader";
+import { Smartphone, BarChart3, RotateCcw } from "lucide-react";
 
 const LoginPage: React.FC = () => {
   const { signIn, isAuthenticated, isLoading } = useAuth();
@@ -29,14 +30,11 @@ const LoginPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <div className="bg-white rounded-2xl p-8 shadow-2xl">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
-            <p className="text-gray-600 font-medium">Loading...</p>
-          </div>
-        </div>
-      </div>
+      <Loader
+        fullScreen={true}
+        size="lg"
+        text="Loading..."
+      />
     );
   }
 
@@ -70,8 +68,7 @@ const LoginPage: React.FC = () => {
           <div className="mb-8">
             {signingIn ? (
               <div className="flex flex-col items-center gap-4 py-6">
-                <Loader2 className="w-8 h-8 animate-spin" />
-                <p className="font-medium">Signing you in...</p>
+                <Loader size="md" text="Signing you in..." />
               </div>
             ) : (
               <GoogleSignIn

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from 'react';
-import { toast } from "sonner";
+import { showAuthSuccessToast, showErrorToast } from "../utils/toastHelpers";
 import Cookies from "js-cookie";
 
 interface User {
@@ -85,16 +85,16 @@ export const AuthProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         Cookies.set("token", data.token, { expires: 30 }); // 30 days
         Cookies.set("user", JSON.stringify(data.user), { expires: 30 });
 
-        toast.success(`Welcome ${data.user.name}!`);
+        showAuthSuccessToast(`Welcome back, ${data.user.name}! 🌟`);
 
         return true;
       } else {
-        toast.error(data.message || "Sign-in failed. Please try again.");
+        showErrorToast("Sign-in failed. Please try again.", data);
         return false;
       }
     } catch (error) {
       console.error("Sign-in error:", error);
-      toast.error("Network error. Please check your connection and try again.");
+      showErrorToast("Network error. Please check your connection and try again.", error);
       return false;
     } finally {
       setIsLoading(false);
@@ -112,7 +112,7 @@ export const AuthProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       window.google.accounts.id.disableAutoSelect();
     }
 
-    toast.success("Signed out successfully. See you soon!");
+    showAuthSuccessToast("Signed out successfully. See you soon! 👋");
   };
 
   const value: AuthContextType = {
