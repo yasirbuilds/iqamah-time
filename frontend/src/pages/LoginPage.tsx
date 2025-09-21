@@ -97,8 +97,8 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-center mt-6">
-          <p className="text-white/90 text-sm">
+        <div className="text-center mt-6 relative z-10">
+          <p className="text-white text-sm">
             Join thousands of believers in their spiritual journey
           </p>
         </div>

@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://iqamah-time-production.up.railway.app/auth/google", {
+      const response = await fetch("https://definite-tina-yasirbuilds-abe9fc6e.koyeb.app/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
